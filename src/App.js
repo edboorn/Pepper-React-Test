@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import Items from './components/menuItems'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  state = {
+    items : [],
+    locationId : "",
+    locationTitle : ""
+  };
+
+  server = "http://frontend-challenge-api.pepperhq.com/menu.json"
+  componentDidMount() {
+    fetch(this.server , { method : 'GET' , mode : 'cors' })
+    .then(res => {
+     return res.json()
+    })
+    .then(data => {
+      this.setState({ 
+        items : data.items || [],
+        locationId : data.locationId,
+        locationTitle : data.locationTitle
+        })
+    })
+    .catch(console.log)
+  }
+  render() {
+     return (
+       <div>
+      <center><h1>{this.state.locationTitle}</h1></center>
+      <center><h2>{this.state.locationId}</h2></center>
+      <Items items={this.state.items} />
+      </div>
+    )
+  }
 }
+
 
 export default App;
